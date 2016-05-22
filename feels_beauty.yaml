@@ -1,0 +1,135 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: feels beauty api
+  description: share the beauty you found every moment
+  version: "0.0.1"
+# the domain of the service
+host: api.beauty.feelwith.me
+# array of all schemes that your API supports
+schemes:
+  - http
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /activities:
+    get:
+      summary: 返回活动列表
+      description: |
+        返回目前公开的活动
+      parameters:
+        - name: type
+          in: query
+          description: 活动的类型，1:此刻精选,2:每日精选,4:每周精选
+          required: true
+          type: number
+          format: integer
+        - name: starId
+          in: query
+          description: 用于标示列表的偏移位置
+          required: true
+          type: number
+          format: integer
+      tags:
+        - Actvities
+      responses:
+        200:
+          description: An array of activities
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Activity'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: 创建一个活动
+      description: | 
+        活动主题     
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - text/xml
+        - text/html
+      parameters:
+      - name: "additionalMetadata"
+        in: "formData"
+        description: "Additional data to pass to server"
+        required: false
+        type: "string"
+      - name: "fileName"
+        in: "formData"
+        description: "file name"
+        required: false
+        type: "string"        
+      - name: "file"
+        in: "formData"
+        description: "file to upload"
+        required: false
+        type: "file"
+      responses:
+        200:
+          description: OK
+          
+definitions:
+  Activity:
+    type: object
+    properties:
+      activityId:
+        type: integer
+        description: 活动Id
+      description: 
+        type: string
+        description: 活动描述
+      medias: 
+        type: array
+        items:
+          $ref: '#/definitions/Work'
+  Work:
+    type: object
+    properties:
+      authorId:
+        type: integer
+      nickName:
+        type: string
+      avatar:
+        type: string
+        description: 用户的头像地址
+      media:
+        $ref: '#/definitions/Media'
+  Media:
+    type: object
+    properties:
+      mediaId:
+        type: integer
+        description : 媒体的Id
+      url:
+        type: string
+        description: 资源的地址
+      authorId:
+        type: integer
+  Success:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string        
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string

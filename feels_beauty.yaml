@@ -75,7 +75,28 @@ paths:
       responses:
         200:
           description: OK
-          
+          schema:
+            $ref: '#/definitions/Activity'
+  /work/{workId}:
+    get:
+      summary: detail of work
+      description: 返回作品详情页
+      parameters:
+      - name: "workId"
+        in: "path"
+        description: "ID of work to return"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: detail of work
+          schema:
+            $ref: '#/definitions/Work'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    
 definitions:
   Activity:
     type: object
@@ -93,15 +114,22 @@ definitions:
   Work:
     type: object
     properties:
-      authorId:
+      userId:
         type: integer
       nickName:
         type: string
       avatar:
         type: string
         description: 用户的头像地址
+      likes:
+        type: integer
+        description: 点赞数
       media:
         $ref: '#/definitions/Media'
+      comments:
+        type: array
+        items:
+          $ref: "#/definitions/Comment"
   Media:
     type: object
     properties:
@@ -111,8 +139,35 @@ definitions:
       url:
         type: string
         description: 资源的地址
-      authorId:
+      userId:
         type: integer
+  
+  Comment:
+    type: object
+    properties:
+      commentId:
+        type: integer
+        description : 评论的Id
+      text:
+        type: string
+        description: 评论内容
+      created:
+        type: string
+        format: date-time
+        description: 评论时间
+      user:
+         $ref: "#/definitions/BasicUser"
+      refUser:
+         $ref: "#/definitions/BasicUser"
+  BasicUser:
+    type: object
+    properties:
+      userId:
+        type: integer
+      avatar:
+        type: string
+      nickName:
+        type: string
   Success:
     type: object
     properties:

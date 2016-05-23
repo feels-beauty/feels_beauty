@@ -77,7 +77,25 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Activity'
-  /work/{workId}:
+  /activities/{activityId}:
+    get:
+      summary: 活动详情页
+      parameters:
+      - name: "activityId"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        
+        200:
+          description: detail of work
+          schema:
+            $ref: '#/definitions/Activity'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
+  /works/{workId}:
     get:
       summary: detail of work
       description: 返回作品详情页
